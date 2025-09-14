@@ -1,37 +1,3 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>ROBLOX BEST CONDO GAMES</title>
-  <style>
-    /* Reset */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: Arial, sans-serif;
-    }
-
-    body {
-      background: #0a0a0a;
-      color: white;
-      text-align: center;
-      overflow-x: hidden;
-    }
-
-    /* Header */
-    .header {
-      padding: 20px;
-      font-size: 2.5rem;
-      font-weight: bold;
-      color: #fff;
-      text-shadow: 0 0 20px cyan;
-      animation: glow 2s infinite alternate;
-    }
-
-    @keyframes glow {
-      from { text-shadow: 0 0 10px cyan; }
       to { text-shadow: 0 0 25px blue; }
     }
 

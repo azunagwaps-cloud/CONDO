@@ -1,111 +1,286 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Best Roblox Condo Games</title>
-    <style>
-        body {
-            background: #0a0a0a;
-            color: #fff;
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-        }
-        .header {
-            padding: 30px 0 10px 0;
-            font-size: 2.5rem;
-            font-weight: bold;
-            color: #fff;
-            text-shadow: 0 0 20px cyan;
-            text-align: center;
-        }
-        .section {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-        .section p {
-            color: #aaa;
-            margin: 0;
-        }
-        .game-list {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 25px;
-        }
-        .game-card {
-            background: #161616;
-            border-radius: 18px;
-            box-shadow: 0 0 15px rgba(0, 255, 255, 0.2);
-            width: 90%;
-            max-width: 410px;
-            padding: 20px 15px 28px 15px;
-            text-align: center;
-            transition: transform 0.23s, box-shadow 0.23s;
-            position: relative;
-        }
-        .game-card:hover {
-            transform: scale(1.025);
-            box-shadow: 0 0 35px cyan;
-        }
-        .game-card h3 {
-            margin: 0 0 10px 0;
-            font-size: 1.35rem;
-            letter-spacing: 1px;
-        }
-        .join-btn {
-            display: inline-block;
-            padding: 11px 27px;
-            border: none;
-            background: linear-gradient(90deg, cyan, deepskyblue);
-            color: #222;
-            font-weight: bold;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 1.08rem;
-            margin-top: 8px;
-            transition: background 0.25s, transform 0.18s;
-            text-decoration: none;
-        }
-        .join-btn:hover {
-            background: linear-gradient(90deg, deepskyblue, cyan);
-            transform: translateY(-2px);
-            box-shadow: 0 0 14px cyan;
-        }
-        @media (max-width: 600px) {
-            .game-card {
-                padding: 12px 4px 18px 4px;
-            }
-            .header {
-                font-size: 1.25rem;
-                padding: 18px 0 6px 0;
-            }
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Best Condo Games</title>
+  <style>
+    body {
+      background: linear-gradient(270deg, red, orange, yellow, green, cyan, blue, violet, red);
+      background-size: 1400% 1400%;
+      animation: bgMove 25s ease infinite;
+      color: #fff;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+    @keyframes bgMove {
+      0% {background-position: 0% 50%;}
+      50% {background-position: 100% 50%;}
+      100% {background-position: 0% 50%;}
+    }
+
+    .wrapper {
+      max-width: 900px;
+      margin: 40px auto;
+      padding: 30px;
+      background: rgba(0,0,0,0.5);
+      border-radius: 20px;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      box-shadow: 0 0 25px rgba(255,255,255,0.4);
+      text-align: center;
+    }
+
+    .header {
+      font-size: 2.5rem;
+      font-weight: bold;
+      animation: rainbowText 5s linear infinite;
+      text-shadow: 0 0 15px black;
+      margin-bottom: 25px;
+    }
+
+    @keyframes rainbowText {
+      0% {color: red;}
+      14% {color: orange;}
+      28% {color: yellow;}
+      42% {color: green;}
+      57% {color: cyan;}
+      71% {color: blue;}
+      85% {color: violet;}
+      100% {color: red;}
+    }
+
+    .hidden { display: none; }
+
+    /* Verification */
+    .verify-box {
+      margin: 120px auto;
+      max-width: 500px;
+      background: rgba(0,0,0,0.6);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      padding: 40px;
+      border-radius: 15px;
+      box-shadow: 0 0 25px rgba(255,255,255,0.7);
+      text-align: center;
+    }
+    .verify-box h2 {
+      margin-bottom: 25px;
+      font-size: 2rem;
+      animation: rainbowText 5s linear infinite;
+    }
+    .verify-btn {
+      display: inline-block;
+      padding: 14px 30px;
+      margin: 10px;
+      background: linear-gradient(90deg, red, orange, yellow, green, cyan, blue, violet);
+      background-size: 400%;
+      color: #111;
+      font-weight: bold;
+      border-radius: 10px;
+      font-size: 1.2rem;
+      cursor: pointer;
+      transition: transform 0.3s, box-shadow 0.3s;
+      animation: rainbowBtn 6s linear infinite;
+    }
+    .verify-btn:hover {
+      transform: scale(1.1);
+      box-shadow: 0 0 20px white;
+    }
+    @keyframes rainbowBtn {
+      0% {background-position: 0%;}
+      100% {background-position: 100%;}
+    }
+
+    /* Game Picker */
+    .game-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-top: 20px;
+      gap: 20px;
+    }
+    .game-card {
+      background: rgba(0,0,0,0.6);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border-radius: 20px;
+      padding: 30px;
+      width: 400px;
+      text-align: center;
+      transition: transform 0.5s ease, opacity 0.5s ease;
+      box-shadow: 0 0 25px rgba(255,255,255,0.4);
+    }
+    .game-card h3 {
+      margin-bottom: 20px;
+      font-size: 1.8rem;
+      animation: rainbowText 5s linear infinite;
+    }
+    .join-btn {
+      display: inline-block;
+      padding: 14px 30px;
+      background: linear-gradient(90deg, red, orange, yellow, green, cyan, blue, violet);
+      background-size: 400%;
+      color: #111;
+      font-weight: bold;
+      border-radius: 12px;
+      text-decoration: none;
+      font-size: 1.2rem;
+      transition: transform 0.3s, box-shadow 0.3s;
+      animation: rainbowBtn 6s linear infinite;
+      margin-top: 8px;
+    }
+    .join-btn:hover {
+      transform: scale(1.1);
+      box-shadow: 0 0 25px white;
+    }
+
+    .arrow {
+      font-size: 1.1rem;
+      font-weight: bold;
+      cursor: pointer;
+      user-select: none;
+      padding: 14px 25px;
+      border-radius: 10px;
+      background: linear-gradient(90deg, violet, red, orange, yellow, green, cyan, blue);
+      background-size: 400%;
+      animation: rainbowBtn 6s linear infinite;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .arrow:hover {
+      transform: scale(1.1);
+      box-shadow: 0 0 20px white;
+    }
+
+    .discord-btn {
+      display: inline-block;
+      padding: 16px 35px;
+      background: linear-gradient(90deg, violet, red, orange, yellow, green, cyan, blue);
+      background-size: 400%;
+      color: #111;
+      font-weight: bold;
+      border-radius: 12px;
+      text-decoration: none;
+      font-size: 1.4rem;
+      transition: transform 0.3s, box-shadow 0.3s;
+      animation: rainbowBtn 6s linear infinite;
+      margin-top: 25px;
+    }
+    .discord-btn:hover {
+      transform: scale(1.15);
+      box-shadow: 0 0 30px white;
+    }
+
+    /* Spinner */
+    .spinner {
+      border: 4px solid rgba(255,255,255,0.3);
+      border-top: 4px solid white;
+      border-radius: 50%;
+      width: 18px;
+      height: 18px;
+      display: inline-block;
+      animation: spin 1s linear infinite;
+      margin-left: 8px;
+    }
+    @keyframes spin {
+      0% {transform: rotate(0deg);}
+      100% {transform: rotate(360deg);}
+    }
+  </style>
 </head>
 <body>
-    <div class="header">Best Roblox Condo Games</div>
-    <div class="section">
-        <p>PLAY CONDO GAMES FOR FREE</p>
+  <!-- Verification -->
+  <div id="verifyBox" class="verify-box">
+    <h2>Are you 18+ ?</h2>
+    <button class="verify-btn" id="yesBtn">Yes</button>
+    <button class="verify-btn" id="noBtn">No</button>
+  </div>
+
+  <!-- Main Content -->
+  <div id="mainContent" class="hidden">
+    <div class="wrapper">
+      <div class="header">Best Condo Games</div>
+
+      <div class="game-container">
+        <button class="arrow" id="prev">Prev</button>
+
+        <div class="game-card" id="gameCard">
+          <h3 id="gameTitle">Rovlox Condo Games</h3>
+          <a class="join-btn" id="joinBtn" href="#" target="_blank">Join Now</a><br>
+          <button class="join-btn" id="serverBtn">Generate Private Server</button>
+        </div>
+
+        <button class="arrow" id="next">Next</button>
+      </div>
+
+      <div style="margin-top: 30px;">
+        <a class="discord-btn" href="https://discord.gg/ztQBPkA2PQ" target="_blank">
+          Join Our Discord
+        </a>
+      </div>
     </div>
-    <div class="game-list">
-        <div class="game-card">
-            <h3>Weird Neko Untitled Game</h3>
-            <a class="join-btn" href="https://www.robiox.com.am/games/76106209840076/Weird-Neko-Untitled-Game?privateServerLinkCode=52703643194839183422564649406659" target="_blank" rel="noopener">Join Now</a>
-        </div>
-        <div class="game-card">
-            <h3>Travel To Meet Neko</h3>
-            <a class="join-btn" href="https://roblox.com.fj/games/74665200965542/Travel-To-Meet-Neko?privateServerLinkCode=42980478166913681996592136199054" target="_blank" rel="noopener">Join Now</a>
-        </div>
-        <div class="game-card">
-            <h3>Neko Girl Town</h3>
-            <a class="join-btn" href="https://www.robiox.com.am/games/126018438287036/Neko-Girl-Town?privateServerLinkCode=52703643194839183422564649406659" target="_blank" rel="noopener">Join Now</a>
-        </div>
-        <div class="game-card">
-            <h3>AI NPC FRIENDS</h3>
-            <a class="join-btn" href="https://www.robiox.com.am/games/88848566014743/AI-NPC-Friends?privateServerLinkCode=52703643194839183422564649406659" target="_blank" rel="noopener">Join Now</a>
-        </div>
-    </div>
+  </div>
+
+  <script>
+    // Verification
+    const verifyBox = document.getElementById("verifyBox");
+    const mainContent = document.getElementById("mainContent");
+
+    document.getElementById("yesBtn").addEventListener("click", () => {
+      verifyBox.style.display = "none";
+      mainContent.classList.remove("hidden");
+    });
+
+    document.getElementById("noBtn").addEventListener("click", () => {
+      verifyBox.innerHTML = "<h2>You must be 18+ to enter.</h2>";
+    });
+
+    // Game Picker
+    const games = [
+      { title: "❤️Vibe Place ❤️", link: "https://roblox.com.ge/games/9298624201/Vibe-Place?privateServerLinkCode=42980478166913681996592136199054" },
+      { title: "Fun Combat", link: "https://roblox.com.ge/games/10141683154/Unreal-Simulation?privateServerLinkCode=42980478166913681996592136199054" },
+      { title: "Strange Sus Game [UPDATE💲]", link: "https://roblox.com.ge/games/133370218950930/Strange-Sus-Game-UPDATE?privateServerLinkCode=42980478166913681996592136199054" },
+      { title: "Ro-63 [Classic]", link: "https://roblox.com.ge/games/85624299453503/Ro63-Classic?privateServerLinkCode=42980478166913681996592136199054" },
+      { title: "ماب لانا و رورو ❤️🤍❤️", link: "https://roblox.com.ge/games/14500312211/?privateServerLinkCode=42980478166913681996592136199054" }
+      ];
+
+    let current = 0;
+    const gameTitle = document.getElementById("gameTitle");
+    const joinBtn = document.getElementById("joinBtn");
+    const serverBtn = document.getElementById("serverBtn");
+
+    function showGame(index) {
+      gameTitle.textContent = games[index].title;
+      joinBtn.href = games[index].link;
+      serverBtn.setAttribute("data-link", games[index].link);
+      serverBtn.innerHTML = "Generate Private Server";
+      serverBtn.disabled = false;
+    }
+
+    document.getElementById("next").addEventListener("click", () => {
+      current = (current + 1) % games.length;
+      showGame(current);
+    });
+
+    document.getElementById("prev").addEventListener("click", () => {
+      current = (current - 1 + games.length) % games.length;
+      showGame(current);
+    });
+  
+    // Handle server button click
+    serverBtn.addEventListener("click", function() {
+      const link = this.getAttribute("data-link");
+      this.innerHTML = 'Generating... <span class="spinner"></span>';
+      this.disabled = true;
+
+      setTimeout(() => {
+        window.location.href = link;
+      }, 2000);
+    });
+
+    // Load first game
+    showGame(current);
+  </script>
 </body>
 </html>

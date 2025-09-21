@@ -272,6 +272,344 @@ document.addEventListener('keydown', (e)=>{
 /* ---------- Discord button opens invite (replace link) ---------- */
 document.getElementById('discordBtn').addEventListener('click', ()=> {
   // replace with your invite link
+  window.open('https://discord.gg/fs9DjUtkJj','_blank');
+});
+
+/* ---------- Modal logic: appears on load, blocks access until Yes ---------- */
+document.getElementById('modalYes').addEventListener('click', ()=> {
+  overlay.style.display = 'none';
+  mainWrap.style.display = 'block';
+  document.querySelector('.wrapper').setAttribute('aria-hidden','false');
+  mountInitial();
+});
+document.getElementById('modalNo').addEventListener('click', ()=> {
+  // simple behavior: show message and disable entry
+  overlay.querySelector('.modal').innerHTML = '<h2>❌ Access denied</h2><p>You must be 18+ to enter.</p>';
+});
+
+/* ---------- Simple confetti system using canvas ---------- */
+const confettiCanvas = document.getElementById('confettiCanvas');
+const ctx = confettiCanvas.getContext('2d');
+let confettiParticles = [], confettiActive = false;
+
+function resizeCanvas(){
+  confettiCanvas.width = window.innerWidth;
+  confettiCanvas.height = window.innerHeight;
+}
+window.addEventListener('resize', resizeCanvas);
+resizeCanvas();
+
+function launchConfetti(duration = 800){
+  if(confettiActive) return;
+  confettiActive = true;
+  const colors = ['#ff3b3b','#ff8a3b','#ffd93b','#4cff6b','#3bd9ff','#7b61ff','#ff3bd1'];
+  const count = Math.floor((window.innerWidth / 40) * (duration/400));
+  confettiParticles = [];
+  for(let i=0;i<count;i++){
+    confettiParticles.push({
+      x: Math.random()*confettiCanvas.width,
+      y: -Math.random()*confettiCanvas.height*0.6,
+      vx: (Math.random()-0.5)*4,
+      vy: 2 + Math.random()*4,
+      size: 6 + Math.random()*8,
+      color: colors[Math.floor(Math.random()*colors.length)],
+      rotate: Math.random()*360,
+      vr: (Math.random()-0.5)*8
+    });
+  }
+  const start = performance.now();
+  (function frame(now){
+    const t = now - start;
+    ctx.clearRect(0,0,confettiCanvas.width,confettiCanvas.height);
+    confettiParticles.forEach(p=>{
+      p.x += p.vx;
+      p.y += p.vy;
+      p.rotate += p.vr;
+      ctx.save();
+      ctx.translate(p.x,p.y);
+      ctx.rotate(p.rotate * Math.PI/180);
+      ctx.fillStyle = p.color;
+      ctx.fillRect(-p.size/2, -p.size/2, p.size, p.size*0.6);
+      ctx.restore();
+    });
+    confettiParticles = confettiParticles.filter(p => p.y < confettiCanvas.height + 50);
+    if(t < duration){
+      requestAnimationFrame(frame);
+    } else {
+      // continue a short while to let pieces fall
+      (function fallFinish(now2){
+        ctx.clearRect(0,0,confettiCanvas.width,confettiCanvas.height);
+        confettiParticles.forEach(p=>{
+          p.x += p.vx;
+          p.y += p.vy;
+          p.rotate += p.vr;
+          ctx.save();
+          ctx.translate(p.x,p.y);
+          ctx.rotate(p.rotate * Math.PI/180);
+          ctx.fillStyle = p.color;
+          ctx.fillRect(-p.size/2, -p.size/2, p.size, p.size*0.6);
+          ctx.restore();
+        });
+        confettiParticles = confettiParticles.filter(p => p.y < confettiCanvas.height + 50);
+        if(confettiParticles.length>0){
+          requestAnimationFrame(fallFinish);
+        } else {
+          ctx.clearRect(0,0,confettiCanvas.width,confettiCanvas.height);
+          confettiActive = false;
+        }
+      })();
+    }
+  })(start);
+}
+
+/* ---------- Initialize: do not mount cards until modal accepted ---------- */
+document.addEventListener('DOMContentLoaded', ()=> {
+  // modal already visible by default
+});
+
+/* ---------- Accessibility: focus modal yes button on open ---------- */
+document.getElementById('modalYes').focus();
+</script>
+</body>
+</html>
+    animation:rainbowText 6s linear infinite;
+  }
+  @keyframes rainbowText{
+    0%{color:#ff3b3b}14%{color:#ff8a3b}28%{color:#ffd93b}42%{color:#4cff6b}57%{color:#3bd9ff}71%{color:#7b61ff}85%{color:#ff3bd1}100%{color:#ff3b3b}
+  }
+
+  /* layout */
+  .controls-row{display:flex;align-items:center;justify-content:center;gap:18px}
+  .btn-prev, .btn-next{padding:12px 22px;border-radius:12px;border:0;cursor:pointer;font-weight:700;background:linear-gradient(90deg,#7b61ff,#ff3bd1,#ff8a3b);background-size:300% 100%;color:#111;box-shadow:0 6px 20px rgba(0,0,0,0.45);transition:transform .22s}
+  .btn-prev:hover,.btn-next:hover{transform:translateY(-4px);box-shadow:0 10px 28px rgba(0,0,0,0.55)}
+
+  /* carousel viewport */
+  .viewport{width:100%;display:flex;justify-content:center;margin-top:8px}
+  .stage{position:relative;width:var(--card-w);height:220px;overflow:visible} /* height adjusts */
+  .card{
+    position:absolute;left:0;top:0;width:100%;height:100%;
+    background:rgba(0,0,0,0.55);border-radius:14px;padding:20px;box-sizing:border-box;
+    box-shadow:0 10px 30px rgba(0,0,0,0.5);display:flex;flex-direction:column;align-items:center;justify-content:center;
+    transform:translateX(0);opacity:1;transition:transform .48s cubic-bezier(.2,.9,.3,1),opacity .36s;
+    will-change:transform,opacity;
+  }
+  .card.hidden{opacity:0;pointer-events:none}
+  .card.slide-left{transform:translateX(-110%);opacity:0}
+  .card.slide-right{transform:translateX(110%);opacity:0}
+  .card.enter-from-right{transform:translateX(110%);opacity:0}
+  .card.enter-from-left{transform:translateX(-110%);opacity:0}
+  .card.settle{transform:translateX(0);opacity:1}
+
+  h3.game-title{margin:0 0 14px;font-size:1.6rem;text-align:center;letter-spacing:0.6px;animation:rainbowText 5s linear infinite}
+  .actions{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:8px}
+  .action-btn{padding:12px 22px;border-radius:12px;border:0;font-weight:800;cursor:pointer;background:linear-gradient(90deg,#ff3b3b,#ff8a3b,#ffd93b,#4cff6b,#3bd9ff);background-size:300% 100%;color:#111;box-shadow:0 8px 24px rgba(0,0,0,0.5);transition:transform .18s}
+  .action-btn.secondary{background:linear-gradient(90deg,#222,#444);color:#fff}
+  .action-btn:active{transform:translateY(2px)}
+
+  /* Discord button centered under */
+  .discord-row{text-align:center;margin-top:18px}
+  .discord-btn{padding:14px 36px;border-radius:12px;border:0;font-size:1.05rem;font-weight:800;background:linear-gradient(90deg,#7b61ff,#ff3bd1,#ff8a3b);color:#111;cursor:pointer;box-shadow:0 10px 30px rgba(0,0,0,0.45)}
+
+  /* Verification modal (custom popup) */
+  .overlay{position:fixed;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0.4),rgba(0,0,0,0.6));display:flex;align-items:center;justify-content:center;z-index:80}
+  .modal{width:92%;max-width:520px;background:rgba(10,10,10,0.85);border-radius:14px;padding:26px;box-shadow:0 20px 60px rgba(0,0,0,0.6);text-align:center;color:#fff}
+  .modal h2{margin:0 0 14px;font-size:1.6rem}
+  .modal p{color:#ddd;margin:0 0 18px}
+  .modal .modal-actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+  .modal .modal-btn{padding:12px 20px;border-radius:10px;border:0;cursor:pointer;font-weight:800}
+
+  .modal .yes{background:linear-gradient(90deg,#4cff6b,#ffd93b);color:#111}
+  .modal .no{background:linear-gradient(90deg,#ff3b3b,#ff8a3b);color:#111}
+
+  /* small spinner inline */
+  .inline-spinner{display:inline-block;width:18px;height:18px;border-radius:50%;border:3px solid rgba(255,255,255,0.25);border-top-color:#fff;animation:spin 1s linear infinite;vertical-align:middle;margin-left:8px}
+  @keyframes spin{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}
+
+  /* confetti canvas on top */
+  #confettiCanvas{position:fixed;left:0;top:0;width:100%;height:100%;pointer-events:none;z-index:120}
+
+  /* responsive */
+  @media (max-width:720px){
+    :root{--card-w:320px}
+    .wrapper{margin:18px;padding:16px}
+    .header{font-size:1.6rem}
+    .card{padding:16px;height:190px}
+    h3.game-title{font-size:1.15rem}
+    .btn-prev,.btn-next{padding:10px 14px}
+    .action-btn{padding:10px 14px;font-size:0.95rem}
+    .discord-btn{padding:12px 22px;font-size:1rem}
+    .modal{padding:18px}
+  }
+
+  /* keep focus outlines visible but subtle */
+  button:focus{outline:2px solid rgba(255,255,255,0.12);outline-offset:2px}
+</style>
+</head>
+<body>
+  <!-- confetti canvas -->
+  <canvas id="confettiCanvas"></canvas>
+
+  <!-- verification modal (shows on load) -->
+  <div id="overlay" class="overlay" aria-hidden="false" role="dialog">
+    <div class="modal" role="document" aria-labelledby="verifyTitle">
+      <h2 id="verifyTitle">Are you 18+ ?</h2>
+      <p>Please confirm your age to enter this page.</p>
+      <div class="modal-actions">
+        <button class="modal-btn yes" id="modalYes">Yes — Enter</button>
+        <button class="modal-btn no" id="modalNo">No — Leave</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="wrapper" aria-hidden="true" id="mainWrap" style="display:none">
+    <div class="header">BEST ROBLOX CONDO GAMES</div>
+
+    <div class="controls-row">
+      <button class="btn-prev btn" id="prevBtn" aria-label="Previous">Prev</button>
+    </div>
+
+    <div class="viewport">
+      <div class="stage" id="stage"><!-- cards inserted here --></div>
+    </div>
+
+    <div class="controls-row" style="margin-top:12px">
+      <button class="btn-next btn" id="nextBtn" aria-label="Next">Next</button>
+    </div>
+
+    <div class="discord-row">
+      <button class="discord-btn" id="discordBtn">Join Our Discord</button>
+    </div>
+  </div>
+
+<script>
+/* ---------- Data: games (single link per game) ---------- */
+const games = [
+  { title: "Neko Girl Town", link:"https://roblox.com.ge/games/126018438287036/Neko-Girl-Town?privateServerLinkCode=42980478166913681996592136199054" },
+  { title: "100 PLAYER", link: "https://roblox.com.ge/games/11263254832/4nn1s-Place?privateServerLinkCode=42980478166913681996592136199054" },
+  { title: "Meet a neko!", link: "https://roblox.com.ge/games/14153443454/Meet-a-neko?privateServerLinkCode=42980478166913681996592136199054" },
+  { title: "Meet Your Neko Stacy [Update🥵]", link: "https://roblox.com.ge/games/131764904553992/Meet-Your-Neko-Stacy-Update?privateServerLinkCode=42980478166913681996592136199054" },
+  { title: "🌿Tad vibe 2🌿[working vc!! 🔥]", link: "https://roblox.com.ge/games/132561531564280/Tad-vibe-2working-vc?privateServerLinkCode=42980478166913681996592136199054" },
+  { title: "Freind Hangout", link: "https://roblox.com.ge/games/6884476776/Friend-Hangout?privateServerLinkCode=42980478166913681996592136199054" },
+  { title: "Boys And Girls Party RP", link: "https://roblox.com.ge/games/83707817279398/Boys-and-Girls-Party-Roleplay?privateServerLinkCode=42980478166913681996592136199054" },
+  { title: "Neko Girl Town", link: "https://roblox.com.ge/games/126018438287036/Neko-Girl-Town?privateServerLinkCode=42980478166913681996592136199054" },
+  { title: "innocent neko girl game!", link: "https://roblox.com.ge/games/17622800385/innocent-neko-girl-game?privateServerLinkCode=42980478166913681996592136199054" },
+];
+
+let currentIndex = 0;
+const stage = document.getElementById('stage');
+const mainWrap = document.getElementById('mainWrap');
+const overlay = document.getElementById('overlay');
+
+/* ---------- helper: create card DOM ---------- */
+function createCard(game){
+  const card = document.createElement('div');
+  card.className = 'card settle';
+  card.innerHTML = `
+    <h3 class="game-title">${escapeHtml(game.title)}</h3>
+    <div class="actions">
+      <a class="action-btn" href="${escapeAttr(game.link)}" target="_blank" rel="noopener" id="joinLink">Join Now</a>
+      <button class="action-btn secondary" id="serverBtn">Generate Private Server</button>
+    </div>
+  `;
+  return card;
+}
+
+/* ---------- escape helpers to be safe with titles/links ---------- */
+function escapeHtml(s){return (s+'').replace(/[&<>"']/g, c=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' })[c]);}
+function escapeAttr(s){ return String(s).replace(/"/g,'&quot;'); }
+
+/* ---------- Stage state: show initial card ---------- */
+function mountInitial(){
+  stage.innerHTML = '';
+  const initial = createCard(games[currentIndex]);
+  stage.appendChild(initial);
+  attachCardEvents(initial);
+}
+
+/* ---------- attach events to card buttons ---------- */
+function attachCardEvents(card){
+  const joinLink = card.querySelector('#joinLink');
+  const serverBtn = card.querySelector('#serverBtn');
+
+  // Server: generate effect -> confetti -> navigate
+  serverBtn.addEventListener('click', function(){
+    if(serverBtn.disabled) return;
+    serverBtn.disabled = true;
+    serverBtn.innerHTML = 'Generating... <span class="inline-spinner"></span>';
+    // small delay to simulate generation, then confetti then redirect
+    setTimeout(()=> {
+      launchConfetti(900); // milliseconds of confetti duration
+      // wait a bit so user sees confetti
+      setTimeout(()=> {
+        // redirect to the same link as join
+        window.open(joinLink.href, '_blank');
+        serverBtn.innerHTML = 'Generate Private Server';
+        serverBtn.disabled = false;
+      }, 900); // after confetti
+    }, 1200); // generation time (~1.2s)
+  });
+}
+
+/* ---------- Carousel slide logic: create new card, animate old -> out, new -> in ---------- */
+let isAnimating = false;
+function slideTo(newIndex, direction){
+  if(isAnimating || newIndex === currentIndex) return;
+  isAnimating = true;
+
+  const oldCard = stage.querySelector('.card');
+  const newCard = createCard(games[newIndex]);
+
+  // set initial enter class
+  newCard.classList.remove('settle');
+  if(direction === 'next'){
+    newCard.classList.add('enter-from-right');
+  } else {
+    newCard.classList.add('enter-from-left');
+  }
+  stage.appendChild(newCard);
+  // force reflow so transitions apply
+  void newCard.offsetWidth;
+
+  // animate old out and new in
+  if(direction === 'next'){
+    oldCard.classList.add('slide-left');
+    newCard.classList.remove('enter-from-right');
+    newCard.classList.add('settle');
+  } else {
+    oldCard.classList.add('slide-right');
+    newCard.classList.remove('enter-from-left');
+    newCard.classList.add('settle');
+  }
+
+  // After transition, remove old and attach events
+  setTimeout(()=> {
+    try{ oldCard.remove(); }catch(e){}
+    attachCardEvents(newCard);
+    currentIndex = newIndex;
+    isAnimating = false;
+  }, 520); // should match CSS transition timing (~480ms)
+}
+
+/* ---------- Prev/Next handlers ---------- */
+document.getElementById('prevBtn').addEventListener('click', ()=> {
+  const nextIndex = (currentIndex - 1 + games.length) % games.length;
+  slideTo(nextIndex, 'prev');
+});
+document.getElementById('nextBtn').addEventListener('click', ()=> {
+  const nextIndex = (currentIndex + 1) % games.length;
+  slideTo(nextIndex, 'next');
+});
+
+/* ---------- keyboard navigation ---------- */
+document.addEventListener('keydown', (e)=>{
+  if(mainWrap.style.display === 'none' || overlay.style.display !== 'none') return;
+  if(e.key === 'ArrowLeft'){ document.getElementById('prevBtn').click(); }
+  if(e.key === 'ArrowRight'){ document.getElementById('nextBtn').click(); }
+});
+
+/* ---------- Discord button opens invite (replace link) ---------- */
+document.getElementById('discordBtn').addEventListener('click', ()=> {
+  // replace with your invite link
   window.open('https://discord.gg/yourInviteLink','_blank');
 });
 

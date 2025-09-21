@@ -1,286 +1,374 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Best Condo Games</title>
-  <style>
-    body {
-      background: linear-gradient(270deg, red, orange, yellow, green, cyan, blue, violet, red);
-      background-size: 1400% 1400%;
-      animation: bgMove 25s ease infinite;
-      color: #fff;
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-    }
-    @keyframes bgMove {
-      0% {background-position: 0% 50%;}
-      50% {background-position: 100% 50%;}
-      100% {background-position: 0% 50%;}
-    }
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>ROBLOX CONDO GAMES</title>
+<style>
+  :root{
+    --glass: rgba(0,0,0,0.55);
+    --accent: #ffffff;
+    --card-w: 420px;
+  }
 
-    .wrapper {
-      max-width: 900px;
-      margin: 40px auto;
-      padding: 30px;
-      background: rgba(0,0,0,0.5);
-      border-radius: 20px;
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      box-shadow: 0 0 25px rgba(255,255,255,0.4);
-      text-align: center;
-    }
+  /* Body + animated rainbow background */
+  html,body{height:100%;margin:0;font-family:Arial,Helvetica,sans-serif;background:
+    linear-gradient(270deg, #ff3b3b, #ff8a3b, #ffd93b, #4cff6b, #3bd9ff, #7b61ff, #ff3bd1);
+    background-size:1400% 1400%; animation:bgMove 24s linear infinite;color:#fff}
+  @keyframes bgMove{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
 
-    .header {
-      font-size: 2.5rem;
-      font-weight: bold;
-      animation: rainbowText 5s linear infinite;
-      text-shadow: 0 0 15px black;
-      margin-bottom: 25px;
-    }
+  /* Centered wrapper (glass) */
+  .wrapper{
+    max-width: 920px;
+    margin: 36px auto;
+    padding: 26px;
+    background: rgba(0,0,0,0.45);
+    border-radius:18px;
+    box-shadow:0 10px 40px rgba(0,0,0,0.6);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
 
-    @keyframes rainbowText {
-      0% {color: red;}
-      14% {color: orange;}
-      28% {color: yellow;}
-      42% {color: green;}
-      57% {color: cyan;}
-      71% {color: blue;}
-      85% {color: violet;}
-      100% {color: red;}
-    }
+  .header{
+    text-align:center;
+    font-size:2.4rem;
+    font-weight:800;
+    margin:6px 0 18px;
+    animation:rainbowText 6s linear infinite;
+  }
+  @keyframes rainbowText{
+    0%{color:#ff3b3b}14%{color:#ff8a3b}28%{color:#ffd93b}42%{color:#4cff6b}57%{color:#3bd9ff}71%{color:#7b61ff}85%{color:#ff3bd1}100%{color:#ff3b3b}
+  }
 
-    .hidden { display: none; }
+  /* layout */
+  .controls-row{display:flex;align-items:center;justify-content:center;gap:18px}
+  .btn-prev, .btn-next{padding:12px 22px;border-radius:12px;border:0;cursor:pointer;font-weight:700;background:linear-gradient(90deg,#7b61ff,#ff3bd1,#ff8a3b);background-size:300% 100%;color:#111;box-shadow:0 6px 20px rgba(0,0,0,0.45);transition:transform .22s}
+  .btn-prev:hover,.btn-next:hover{transform:translateY(-4px);box-shadow:0 10px 28px rgba(0,0,0,0.55)}
 
-    /* Verification */
-    .verify-box {
-      margin: 120px auto;
-      max-width: 500px;
-      background: rgba(0,0,0,0.6);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      padding: 40px;
-      border-radius: 15px;
-      box-shadow: 0 0 25px rgba(255,255,255,0.7);
-      text-align: center;
-    }
-    .verify-box h2 {
-      margin-bottom: 25px;
-      font-size: 2rem;
-      animation: rainbowText 5s linear infinite;
-    }
-    .verify-btn {
-      display: inline-block;
-      padding: 14px 30px;
-      margin: 10px;
-      background: linear-gradient(90deg, red, orange, yellow, green, cyan, blue, violet);
-      background-size: 400%;
-      color: #111;
-      font-weight: bold;
-      border-radius: 10px;
-      font-size: 1.2rem;
-      cursor: pointer;
-      transition: transform 0.3s, box-shadow 0.3s;
-      animation: rainbowBtn 6s linear infinite;
-    }
-    .verify-btn:hover {
-      transform: scale(1.1);
-      box-shadow: 0 0 20px white;
-    }
-    @keyframes rainbowBtn {
-      0% {background-position: 0%;}
-      100% {background-position: 100%;}
-    }
+  /* carousel viewport */
+  .viewport{width:100%;display:flex;justify-content:center;margin-top:8px}
+  .stage{position:relative;width:var(--card-w);height:220px;overflow:visible} /* height adjusts */
+  .card{
+    position:absolute;left:0;top:0;width:100%;height:100%;
+    background:rgba(0,0,0,0.55);border-radius:14px;padding:20px;box-sizing:border-box;
+    box-shadow:0 10px 30px rgba(0,0,0,0.5);display:flex;flex-direction:column;align-items:center;justify-content:center;
+    transform:translateX(0);opacity:1;transition:transform .48s cubic-bezier(.2,.9,.3,1),opacity .36s;
+    will-change:transform,opacity;
+  }
+  .card.hidden{opacity:0;pointer-events:none}
+  .card.slide-left{transform:translateX(-110%);opacity:0}
+  .card.slide-right{transform:translateX(110%);opacity:0}
+  .card.enter-from-right{transform:translateX(110%);opacity:0}
+  .card.enter-from-left{transform:translateX(-110%);opacity:0}
+  .card.settle{transform:translateX(0);opacity:1}
 
-    /* Game Picker */
-    .game-container {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      margin-top: 20px;
-      gap: 20px;
-    }
-    .game-card {
-      background: rgba(0,0,0,0.6);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-      border-radius: 20px;
-      padding: 30px;
-      width: 400px;
-      text-align: center;
-      transition: transform 0.5s ease, opacity 0.5s ease;
-      box-shadow: 0 0 25px rgba(255,255,255,0.4);
-    }
-    .game-card h3 {
-      margin-bottom: 20px;
-      font-size: 1.8rem;
-      animation: rainbowText 5s linear infinite;
-    }
-    .join-btn {
-      display: inline-block;
-      padding: 14px 30px;
-      background: linear-gradient(90deg, red, orange, yellow, green, cyan, blue, violet);
-      background-size: 400%;
-      color: #111;
-      font-weight: bold;
-      border-radius: 12px;
-      text-decoration: none;
-      font-size: 1.2rem;
-      transition: transform 0.3s, box-shadow 0.3s;
-      animation: rainbowBtn 6s linear infinite;
-      margin-top: 8px;
-    }
-    .join-btn:hover {
-      transform: scale(1.1);
-      box-shadow: 0 0 25px white;
-    }
+  h3.game-title{margin:0 0 14px;font-size:1.6rem;text-align:center;letter-spacing:0.6px;animation:rainbowText 5s linear infinite}
+  .actions{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:8px}
+  .action-btn{padding:12px 22px;border-radius:12px;border:0;font-weight:800;cursor:pointer;background:linear-gradient(90deg,#ff3b3b,#ff8a3b,#ffd93b,#4cff6b,#3bd9ff);background-size:300% 100%;color:#111;box-shadow:0 8px 24px rgba(0,0,0,0.5);transition:transform .18s}
+  .action-btn.secondary{background:linear-gradient(90deg,#222,#444);color:#fff}
+  .action-btn:active{transform:translateY(2px)}
 
-    .arrow {
-      font-size: 1.1rem;
-      font-weight: bold;
-      cursor: pointer;
-      user-select: none;
-      padding: 14px 25px;
-      border-radius: 10px;
-      background: linear-gradient(90deg, violet, red, orange, yellow, green, cyan, blue);
-      background-size: 400%;
-      animation: rainbowBtn 6s linear infinite;
-      transition: transform 0.3s, box-shadow 0.3s;
-    }
-    .arrow:hover {
-      transform: scale(1.1);
-      box-shadow: 0 0 20px white;
-    }
+  /* Discord button centered under */
+  .discord-row{text-align:center;margin-top:18px}
+  .discord-btn{padding:14px 36px;border-radius:12px;border:0;font-size:1.05rem;font-weight:800;background:linear-gradient(90deg,#7b61ff,#ff3bd1,#ff8a3b);color:#111;cursor:pointer;box-shadow:0 10px 30px rgba(0,0,0,0.45)}
 
-    .discord-btn {
-      display: inline-block;
-      padding: 16px 35px;
-      background: linear-gradient(90deg, violet, red, orange, yellow, green, cyan, blue);
-      background-size: 400%;
-      color: #111;
-      font-weight: bold;
-      border-radius: 12px;
-      text-decoration: none;
-      font-size: 1.4rem;
-      transition: transform 0.3s, box-shadow 0.3s;
-      animation: rainbowBtn 6s linear infinite;
-      margin-top: 25px;
-    }
-    .discord-btn:hover {
-      transform: scale(1.15);
-      box-shadow: 0 0 30px white;
-    }
+  /* Verification modal (custom popup) */
+  .overlay{position:fixed;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0.4),rgba(0,0,0,0.6));display:flex;align-items:center;justify-content:center;z-index:80}
+  .modal{width:92%;max-width:520px;background:rgba(10,10,10,0.85);border-radius:14px;padding:26px;box-shadow:0 20px 60px rgba(0,0,0,0.6);text-align:center;color:#fff}
+  .modal h2{margin:0 0 14px;font-size:1.6rem}
+  .modal p{color:#ddd;margin:0 0 18px}
+  .modal .modal-actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+  .modal .modal-btn{padding:12px 20px;border-radius:10px;border:0;cursor:pointer;font-weight:800}
 
-    /* Spinner */
-    .spinner {
-      border: 4px solid rgba(255,255,255,0.3);
-      border-top: 4px solid white;
-      border-radius: 50%;
-      width: 18px;
-      height: 18px;
-      display: inline-block;
-      animation: spin 1s linear infinite;
-      margin-left: 8px;
-    }
-    @keyframes spin {
-      0% {transform: rotate(0deg);}
-      100% {transform: rotate(360deg);}
-    }
-  </style>
+  .modal .yes{background:linear-gradient(90deg,#4cff6b,#ffd93b);color:#111}
+  .modal .no{background:linear-gradient(90deg,#ff3b3b,#ff8a3b);color:#111}
+
+  /* small spinner inline */
+  .inline-spinner{display:inline-block;width:18px;height:18px;border-radius:50%;border:3px solid rgba(255,255,255,0.25);border-top-color:#fff;animation:spin 1s linear infinite;vertical-align:middle;margin-left:8px}
+  @keyframes spin{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}
+
+  /* confetti canvas on top */
+  #confettiCanvas{position:fixed;left:0;top:0;width:100%;height:100%;pointer-events:none;z-index:120}
+
+  /* responsive */
+  @media (max-width:720px){
+    :root{--card-w:320px}
+    .wrapper{margin:18px;padding:16px}
+    .header{font-size:1.6rem}
+    .card{padding:16px;height:190px}
+    h3.game-title{font-size:1.15rem}
+    .btn-prev,.btn-next{padding:10px 14px}
+    .action-btn{padding:10px 14px;font-size:0.95rem}
+    .discord-btn{padding:12px 22px;font-size:1rem}
+    .modal{padding:18px}
+  }
+
+  /* keep focus outlines visible but subtle */
+  button:focus{outline:2px solid rgba(255,255,255,0.12);outline-offset:2px}
+</style>
 </head>
 <body>
-  <!-- Verification -->
-  <div id="verifyBox" class="verify-box">
-    <h2>Are you 18+ ?</h2>
-    <button class="verify-btn" id="yesBtn">Yes</button>
-    <button class="verify-btn" id="noBtn">No</button>
-  </div>
+  <!-- confetti canvas -->
+  <canvas id="confettiCanvas"></canvas>
 
-  <!-- Main Content -->
-  <div id="mainContent" class="hidden">
-    <div class="wrapper">
-      <div class="header">Best Condo Games</div>
-
-      <div class="game-container">
-        <button class="arrow" id="prev">Prev</button>
-
-        <div class="game-card" id="gameCard">
-          <h3 id="gameTitle">Rovlox Condo Games</h3>
-          <a class="join-btn" id="joinBtn" href="#" target="_blank">Join Now</a><br>
-          <button class="join-btn" id="serverBtn">Generate Private Server</button>
-        </div>
-
-        <button class="arrow" id="next">Next</button>
-      </div>
-
-      <div style="margin-top: 30px;">
-        <a class="discord-btn" href="https://discord.gg/ztQBPkA2PQ" target="_blank">
-          Join Our Discord
-        </a>
+  <!-- verification modal (shows on load) -->
+  <div id="overlay" class="overlay" aria-hidden="false" role="dialog">
+    <div class="modal" role="document" aria-labelledby="verifyTitle">
+      <h2 id="verifyTitle">Are you 18+ ?</h2>
+      <p>Please confirm your age to enter this page.</p>
+      <div class="modal-actions">
+        <button class="modal-btn yes" id="modalYes">Yes — Enter</button>
+        <button class="modal-btn no" id="modalNo">No — Leave</button>
       </div>
     </div>
   </div>
 
-  <script>
-    // Verification
-    const verifyBox = document.getElementById("verifyBox");
-    const mainContent = document.getElementById("mainContent");
+  <div class="wrapper" aria-hidden="true" id="mainWrap" style="display:none">
+    <div class="header">BEST ROBLOX CONDO GAMES</div>
 
-    document.getElementById("yesBtn").addEventListener("click", () => {
-      verifyBox.style.display = "none";
-      mainContent.classList.remove("hidden");
+    <div class="controls-row">
+      <button class="btn-prev btn" id="prevBtn" aria-label="Previous">Prev</button>
+    </div>
+
+    <div class="viewport">
+      <div class="stage" id="stage"><!-- cards inserted here --></div>
+    </div>
+
+    <div class="controls-row" style="margin-top:12px">
+      <button class="btn-next btn" id="nextBtn" aria-label="Next">Next</button>
+    </div>
+
+    <div class="discord-row">
+      <button class="discord-btn" id="discordBtn">Join Our Discord</button>
+    </div>
+  </div>
+
+<script>
+/* ---------- Data: games (single link per game) ---------- */
+const games = [
+  { title: "Neko Girl Town", link:"https://roblox.com.ge/games/126018438287036/Neko-Girl-Town?privateServerLinkCode=42980478166913681996592136199054" },
+  { title: "100 PLAYER", link: "https://roblox.com.ge/games/11263254832/4nn1s-Place?privateServerLinkCode=42980478166913681996592136199054" },
+  { title: "Meet a neko!", link: "https://roblox.com.ge/games/14153443454/Meet-a-neko?privateServerLinkCode=42980478166913681996592136199054" },
+  { title: "Meet Your Neko Stacy [Update🥵]", link: "https://roblox.com.ge/games/131764904553992/Meet-Your-Neko-Stacy-Update?privateServerLinkCode=42980478166913681996592136199054" },
+  { title: "🌿Tad vibe 2🌿[working vc!! 🔥]", link: "https://roblox.com.ge/games/132561531564280/Tad-vibe-2working-vc?privateServerLinkCode=42980478166913681996592136199054" },
+  { title: "Freind Hangout", link: "https://roblox.com.ge/games/6884476776/Friend-Hangout?privateServerLinkCode=42980478166913681996592136199054" },
+  { title: "Boys And Girls Party RP", link: "https://roblox.com.ge/games/83707817279398/Boys-and-Girls-Party-Roleplay?privateServerLinkCode=42980478166913681996592136199054" },
+  { title: "Neko Girl Town", link: "https://roblox.com.ge/games/126018438287036/Neko-Girl-Town?privateServerLinkCode=42980478166913681996592136199054" },
+  { title: "innocent neko girl game!", link: "https://roblox.com.ge/games/17622800385/innocent-neko-girl-game?privateServerLinkCode=42980478166913681996592136199054" },
+];
+
+let currentIndex = 0;
+const stage = document.getElementById('stage');
+const mainWrap = document.getElementById('mainWrap');
+const overlay = document.getElementById('overlay');
+
+/* ---------- helper: create card DOM ---------- */
+function createCard(game){
+  const card = document.createElement('div');
+  card.className = 'card settle';
+  card.innerHTML = `
+    <h3 class="game-title">${escapeHtml(game.title)}</h3>
+    <div class="actions">
+      <a class="action-btn" href="${escapeAttr(game.link)}" target="_blank" rel="noopener" id="joinLink">Join Now</a>
+      <button class="action-btn secondary" id="serverBtn">Generate Private Server</button>
+    </div>
+  `;
+  return card;
+}
+
+/* ---------- escape helpers to be safe with titles/links ---------- */
+function escapeHtml(s){return (s+'').replace(/[&<>"']/g, c=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' })[c]);}
+function escapeAttr(s){ return String(s).replace(/"/g,'&quot;'); }
+
+/* ---------- Stage state: show initial card ---------- */
+function mountInitial(){
+  stage.innerHTML = '';
+  const initial = createCard(games[currentIndex]);
+  stage.appendChild(initial);
+  attachCardEvents(initial);
+}
+
+/* ---------- attach events to card buttons ---------- */
+function attachCardEvents(card){
+  const joinLink = card.querySelector('#joinLink');
+  const serverBtn = card.querySelector('#serverBtn');
+
+  // Server: generate effect -> confetti -> navigate
+  serverBtn.addEventListener('click', function(){
+    if(serverBtn.disabled) return;
+    serverBtn.disabled = true;
+    serverBtn.innerHTML = 'Generating... <span class="inline-spinner"></span>';
+    // small delay to simulate generation, then confetti then redirect
+    setTimeout(()=> {
+      launchConfetti(900); // milliseconds of confetti duration
+      // wait a bit so user sees confetti
+      setTimeout(()=> {
+        // redirect to the same link as join
+        window.open(joinLink.href, '_blank');
+        serverBtn.innerHTML = 'Generate Private Server';
+        serverBtn.disabled = false;
+      }, 900); // after confetti
+    }, 1200); // generation time (~1.2s)
+  });
+}
+
+/* ---------- Carousel slide logic: create new card, animate old -> out, new -> in ---------- */
+let isAnimating = false;
+function slideTo(newIndex, direction){
+  if(isAnimating || newIndex === currentIndex) return;
+  isAnimating = true;
+
+  const oldCard = stage.querySelector('.card');
+  const newCard = createCard(games[newIndex]);
+
+  // set initial enter class
+  newCard.classList.remove('settle');
+  if(direction === 'next'){
+    newCard.classList.add('enter-from-right');
+  } else {
+    newCard.classList.add('enter-from-left');
+  }
+  stage.appendChild(newCard);
+  // force reflow so transitions apply
+  void newCard.offsetWidth;
+
+  // animate old out and new in
+  if(direction === 'next'){
+    oldCard.classList.add('slide-left');
+    newCard.classList.remove('enter-from-right');
+    newCard.classList.add('settle');
+  } else {
+    oldCard.classList.add('slide-right');
+    newCard.classList.remove('enter-from-left');
+    newCard.classList.add('settle');
+  }
+
+  // After transition, remove old and attach events
+  setTimeout(()=> {
+    try{ oldCard.remove(); }catch(e){}
+    attachCardEvents(newCard);
+    currentIndex = newIndex;
+    isAnimating = false;
+  }, 520); // should match CSS transition timing (~480ms)
+}
+
+/* ---------- Prev/Next handlers ---------- */
+document.getElementById('prevBtn').addEventListener('click', ()=> {
+  const nextIndex = (currentIndex - 1 + games.length) % games.length;
+  slideTo(nextIndex, 'prev');
+});
+document.getElementById('nextBtn').addEventListener('click', ()=> {
+  const nextIndex = (currentIndex + 1) % games.length;
+  slideTo(nextIndex, 'next');
+});
+
+/* ---------- keyboard navigation ---------- */
+document.addEventListener('keydown', (e)=>{
+  if(mainWrap.style.display === 'none' || overlay.style.display !== 'none') return;
+  if(e.key === 'ArrowLeft'){ document.getElementById('prevBtn').click(); }
+  if(e.key === 'ArrowRight'){ document.getElementById('nextBtn').click(); }
+});
+
+/* ---------- Discord button opens invite (replace link) ---------- */
+document.getElementById('discordBtn').addEventListener('click', ()=> {
+  // replace with your invite link
+  window.open('https://discord.gg/yourInviteLink','_blank');
+});
+
+/* ---------- Modal logic: appears on load, blocks access until Yes ---------- */
+document.getElementById('modalYes').addEventListener('click', ()=> {
+  overlay.style.display = 'none';
+  mainWrap.style.display = 'block';
+  document.querySelector('.wrapper').setAttribute('aria-hidden','false');
+  mountInitial();
+});
+document.getElementById('modalNo').addEventListener('click', ()=> {
+  // simple behavior: show message and disable entry
+  overlay.querySelector('.modal').innerHTML = '<h2>❌ Access denied</h2><p>You must be 18+ to enter.</p>';
+});
+
+/* ---------- Simple confetti system using canvas ---------- */
+const confettiCanvas = document.getElementById('confettiCanvas');
+const ctx = confettiCanvas.getContext('2d');
+let confettiParticles = [], confettiActive = false;
+
+function resizeCanvas(){
+  confettiCanvas.width = window.innerWidth;
+  confettiCanvas.height = window.innerHeight;
+}
+window.addEventListener('resize', resizeCanvas);
+resizeCanvas();
+
+function launchConfetti(duration = 800){
+  if(confettiActive) return;
+  confettiActive = true;
+  const colors = ['#ff3b3b','#ff8a3b','#ffd93b','#4cff6b','#3bd9ff','#7b61ff','#ff3bd1'];
+  const count = Math.floor((window.innerWidth / 40) * (duration/400));
+  confettiParticles = [];
+  for(let i=0;i<count;i++){
+    confettiParticles.push({
+      x: Math.random()*confettiCanvas.width,
+      y: -Math.random()*confettiCanvas.height*0.6,
+      vx: (Math.random()-0.5)*4,
+      vy: 2 + Math.random()*4,
+      size: 6 + Math.random()*8,
+      color: colors[Math.floor(Math.random()*colors.length)],
+      rotate: Math.random()*360,
+      vr: (Math.random()-0.5)*8
     });
-
-    document.getElementById("noBtn").addEventListener("click", () => {
-      verifyBox.innerHTML = "<h2>You must be 18+ to enter.</h2>";
+  }
+  const start = performance.now();
+  (function frame(now){
+    const t = now - start;
+    ctx.clearRect(0,0,confettiCanvas.width,confettiCanvas.height);
+    confettiParticles.forEach(p=>{
+      p.x += p.vx;
+      p.y += p.vy;
+      p.rotate += p.vr;
+      ctx.save();
+      ctx.translate(p.x,p.y);
+      ctx.rotate(p.rotate * Math.PI/180);
+      ctx.fillStyle = p.color;
+      ctx.fillRect(-p.size/2, -p.size/2, p.size, p.size*0.6);
+      ctx.restore();
     });
-
-    // Game Picker
-    const games = [
-      { title: "❤️Vibe Place ❤️", link: "https://roblox.com.ge/games/9298624201/Vibe-Place?privateServerLinkCode=42980478166913681996592136199054" },
-      { title: "Fun Combat", link: "https://roblox.com.ge/games/10141683154/Unreal-Simulation?privateServerLinkCode=42980478166913681996592136199054" },
-      { title: "Strange Sus Game [UPDATE💲]", link: "https://roblox.com.ge/games/133370218950930/Strange-Sus-Game-UPDATE?privateServerLinkCode=42980478166913681996592136199054" },
-      { title: "Ro-63 [Classic]", link: "https://roblox.com.ge/games/85624299453503/Ro63-Classic?privateServerLinkCode=42980478166913681996592136199054" },
-      { title: "ماب لانا و رورو ❤️🤍❤️", link: "https://roblox.com.ge/games/14500312211/?privateServerLinkCode=42980478166913681996592136199054" }
-      ];
-
-    let current = 0;
-    const gameTitle = document.getElementById("gameTitle");
-    const joinBtn = document.getElementById("joinBtn");
-    const serverBtn = document.getElementById("serverBtn");
-
-    function showGame(index) {
-      gameTitle.textContent = games[index].title;
-      joinBtn.href = games[index].link;
-      serverBtn.setAttribute("data-link", games[index].link);
-      serverBtn.innerHTML = "Generate Private Server";
-      serverBtn.disabled = false;
+    confettiParticles = confettiParticles.filter(p => p.y < confettiCanvas.height + 50);
+    if(t < duration){
+      requestAnimationFrame(frame);
+    } else {
+      // continue a short while to let pieces fall
+      (function fallFinish(now2){
+        ctx.clearRect(0,0,confettiCanvas.width,confettiCanvas.height);
+        confettiParticles.forEach(p=>{
+          p.x += p.vx;
+          p.y += p.vy;
+          p.rotate += p.vr;
+          ctx.save();
+          ctx.translate(p.x,p.y);
+          ctx.rotate(p.rotate * Math.PI/180);
+          ctx.fillStyle = p.color;
+          ctx.fillRect(-p.size/2, -p.size/2, p.size, p.size*0.6);
+          ctx.restore();
+        });
+        confettiParticles = confettiParticles.filter(p => p.y < confettiCanvas.height + 50);
+        if(confettiParticles.length>0){
+          requestAnimationFrame(fallFinish);
+        } else {
+          ctx.clearRect(0,0,confettiCanvas.width,confettiCanvas.height);
+          confettiActive = false;
+        }
+      })();
     }
+  })(start);
+}
 
-    document.getElementById("next").addEventListener("click", () => {
-      current = (current + 1) % games.length;
-      showGame(current);
-    });
+/* ---------- Initialize: do not mount cards until modal accepted ---------- */
+document.addEventListener('DOMContentLoaded', ()=> {
+  // modal already visible by default
+});
 
-    document.getElementById("prev").addEventListener("click", () => {
-      current = (current - 1 + games.length) % games.length;
-      showGame(current);
-    });
-  
-    // Handle server button click
-    serverBtn.addEventListener("click", function() {
-      const link = this.getAttribute("data-link");
-      this.innerHTML = 'Generating... <span class="spinner"></span>';
-      this.disabled = true;
-
-      setTimeout(() => {
-        window.location.href = link;
-      }, 2000);
-    });
-
-    // Load first game
-    showGame(current);
-  </script>
+/* ---------- Accessibility: focus modal yes button on open ---------- */
+document.getElementById('modalYes').focus();
+</script>
 </body>
 </html>
